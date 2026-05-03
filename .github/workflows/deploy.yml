@@ -2,7 +2,7 @@ name: Deploy Picoratch
 
 on:
   push:
-    branches: [ "develop" ] # 変更を保存したときに動く
+    branches: [ "develop" ]
 
 permissions:
   contents: read
@@ -19,13 +19,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 16 # Scratchはこのバージョンが一番安定します
 
       - name: Install dependencies
-        run: npm install
+        # --legacy-peer-deps をつけることで、古い部品同士の衝突エラーを防ぎます
+        run: npm install --legacy-peer-deps
 
       - name: Build Picoratch
-        run: npm run build
+        # メモリ不足で落ちないように 4GB まで使えるように設定します
+        run: NODE_OPTIONS=--max_old_space_size=4096 npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
