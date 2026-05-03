@@ -3,6 +3,7 @@ name: Deploy Picoratch
 on:
   push:
     branches: [ "develop" ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -19,15 +20,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 16 # Scratchはこのバージョンが一番安定します
+          node-version: 16
 
       - name: Install dependencies
-        # --legacy-peer-deps をつけることで、古い部品同士の衝突エラーを防ぎます
         run: npm install --legacy-peer-deps
 
       - name: Build Picoratch
-        # メモリ不足で落ちないように 4GB まで使えるように設定します
-        run: NODE_OPTIONS=--max_old_space_size=4096 npm run build
+        # CI: false を入れることで、小さな警告でビルドが止まるのを防ぎます
+        # NODE_OPTIONS でメモリ不足を防ぎます
+        run: |
+          export CI=false
+          export NODE_OPTIONS="--max_old_space_size=4096"
+          npm run build
+        env:
+          NODE_ENV: production
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
