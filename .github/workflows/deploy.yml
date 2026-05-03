@@ -20,17 +20,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20 # 16から20に上げるとダウンロードエラーが減ります
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
       - name: Build Picoratch
-        # CI: false を入れることで、小さな警告でビルドが止まるのを防ぎます
-        # NODE_OPTIONS でメモリ不足を防ぎます
         run: |
           export CI=false
           export NODE_OPTIONS="--max_old_space_size=4096"
+          # ビルドを実行
           npm run build
         env:
           NODE_ENV: production
@@ -38,7 +38,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./build
+          # モノレポ版の場合、完成品はここに出力されます
+          path: ./packages/scratch-gui/build
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
