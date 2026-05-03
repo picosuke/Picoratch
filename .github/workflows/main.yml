@@ -1,0 +1,36 @@
+name: Deploy Scratch Mod to GitHub Pages
+
+on:
+  push:
+    branches: [ "develop" ] # scratch-guiの基本ブランチ
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16 # Scratchが安定して動くバージョン
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Scratch
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./build
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
