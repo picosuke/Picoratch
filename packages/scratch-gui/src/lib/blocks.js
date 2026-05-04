@@ -119,18 +119,6 @@ export default function (vm) {
         return sprites;
     };
 
-    const cloneMenu = function () {
-        if (vm.editingTarget && vm.editingTarget.isStage) {
-            const menu = spriteMenu();
-            if (menu.length === 0) {
-                return [['', '']]; // Empty menu matches Scratch 2 behavior
-            }
-            return menu;
-        }
-        const myself = ScratchBlocks.ScratchMsgs.translate('CONTROL_CREATECLONEOF_MYSELF', 'myself');
-        return [[myself, '_myself_']].concat(spriteMenu());
-    };
-
     ScratchBlocks.Blocks.sound_sounds_menu.init = function () {
         const json = jsonForMenuBlock('SOUND_MENU', soundsMenu, 'sounds', []);
         this.jsonInit(json);
@@ -302,59 +290,38 @@ export default function (vm) {
         return true;
     };
 
-// --- ここからPicoratch 3Dブロックの定義を追加 ---
+    // --- ここに3Dブロックの定義を追加 ---
+    // 手動で色を指定するのではなく「colours_motion」という命令（extension）を使うことでエラーを防ぎます
     ScratchBlocks.Blocks['motion_setz'] = {
         init: function () {
             this.jsonInit({
                 "message0": "z座標を %1 にする",
-                "args0": [
-                    {
-                        "type": "input_value",
-                        "name": "Z"
-                    }
-                ],
+                "args0": [{ "type": "input_value", "name": "Z" }],
                 "category": ScratchBlocks.Categories.motion,
-                "colour": ScratchBlocks.Colours.motion.primary,
-                "colourSecondary": ScratchBlocks.Colours.motion.secondary,
-                "colourTertiary": ScratchBlocks.Colours.motion.tertiary,
-                "extensions": ["shape_statement"]
+                "extensions": ["colours_motion", "shape_statement"]
             });
         }
     };
-
     ScratchBlocks.Blocks['motion_changezby'] = {
         init: function () {
             this.jsonInit({
                 "message0": "z座標を %1 ずつ変える",
-                "args0": [
-                    {
-                        "type": "input_value",
-                        "name": "Z"
-                    }
-                ],
+                "args0": [{ "type": "input_value", "name": "Z" }],
                 "category": ScratchBlocks.Categories.motion,
-                "colour": ScratchBlocks.Colours.motion.primary,
-                "colourSecondary": ScratchBlocks.Colours.motion.secondary,
-                "colourTertiary": ScratchBlocks.Colours.motion.tertiary,
-                "extensions": ["shape_statement"]
+                "extensions": ["colours_motion", "shape_statement"]
             });
         }
     };
-
     ScratchBlocks.Blocks['motion_zposition'] = {
         init: function () {
             this.jsonInit({
                 "message0": "z座標",
                 "category": ScratchBlocks.Categories.motion,
-                "colour": ScratchBlocks.Colours.motion.primary,
-                "colourSecondary": ScratchBlocks.Colours.motion.secondary,
-                "colourTertiary": ScratchBlocks.Colours.motion.tertiary,
                 "checkboxInFlyout": true,
-                "extensions": ["output_number"]
+                "extensions": ["colours_motion", "output_number"]
             });
         }
     };
-    // --- ここまで ---
 
     return ScratchBlocks;
 }
