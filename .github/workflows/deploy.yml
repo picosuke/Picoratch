@@ -20,16 +20,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18 # 16と20の間（18）にします！
+          node-version: 18 # ここは安定の18のままです
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        # 邪魔をしていた --legacy-peer-deps を消して、純粋なインストールに戻します！
+        run: npm install
 
       - name: Build Picoratch
         run: |
           export CI=false
-          # --openssl-legacy-provider を追加して、古いルールでの組み立てを許可します
-          export NODE_OPTIONS="--max_old_space_size=4096 --openssl-legacy-provider"
+          export NODE_OPTIONS="--max_old_space_size=4096"
           npm run build
         env:
           NODE_ENV: production
