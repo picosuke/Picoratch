@@ -302,37 +302,59 @@ export default function (vm) {
         return true;
     };
 
-    // --- ここに3Dブロックの定義を追加 ---
+// --- ここからPicoratch 3Dブロックの定義を追加 ---
     ScratchBlocks.Blocks['motion_setz'] = {
         init: function () {
             this.jsonInit({
                 "message0": "z座標を %1 にする",
-                "args0": [{ "type": "input_value", "name": "Z" }],
+                "args0": [
+                    {
+                        "type": "input_value",
+                        "name": "Z"
+                    }
+                ],
                 "category": ScratchBlocks.Categories.motion,
-                "extensions": ["colours_motion", "shape_statement"]
+                "colour": ScratchBlocks.Colours.motion.primary,
+                "colourSecondary": ScratchBlocks.Colours.motion.secondary,
+                "colourTertiary": ScratchBlocks.Colours.motion.tertiary,
+                "extensions": ["shape_statement"]
             });
         }
     };
+
     ScratchBlocks.Blocks['motion_changezby'] = {
         init: function () {
             this.jsonInit({
                 "message0": "z座標を %1 ずつ変える",
-                "args0": [{ "type": "input_value", "name": "Z" }],
+                "args0": [
+                    {
+                        "type": "input_value",
+                        "name": "Z"
+                    }
+                ],
                 "category": ScratchBlocks.Categories.motion,
-                "extensions": ["colours_motion", "shape_statement"]
+                "colour": ScratchBlocks.Colours.motion.primary,
+                "colourSecondary": ScratchBlocks.Colours.motion.secondary,
+                "colourTertiary": ScratchBlocks.Colours.motion.tertiary,
+                "extensions": ["shape_statement"]
             });
         }
     };
+
     ScratchBlocks.Blocks['motion_zposition'] = {
         init: function () {
             this.jsonInit({
                 "message0": "z座標",
                 "category": ScratchBlocks.Categories.motion,
+                "colour": ScratchBlocks.Colours.motion.primary,
+                "colourSecondary": ScratchBlocks.Colours.motion.secondary,
+                "colourTertiary": ScratchBlocks.Colours.motion.tertiary,
                 "checkboxInFlyout": true,
-                "extensions": ["colours_motion", "output_number"]
+                "extensions": ["output_number"]
             });
         }
     };
+    // --- ここまで ---
 
     return ScratchBlocks;
 }
