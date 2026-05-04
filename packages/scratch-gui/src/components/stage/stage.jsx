@@ -10,6 +10,7 @@ import TargetHighlight from '../../containers/target-highlight.jsx';
 import GreenFlagOverlay from '../../containers/green-flag-overlay.jsx';
 import Question from '../../containers/question.jsx';
 import MicIndicator from '../mic-indicator/mic-indicator.jsx';
+import ThreeRenderer from './three-renderer.jsx';
 import {STAGE_DISPLAY_SIZES} from '../../lib/layout-constants.js';
 import {getStageDimensions} from '../../lib/screen-utils.js';
 import styles from './stage.css';
@@ -52,6 +53,13 @@ const StageComponent = props => {
                         width: stageDimensions.width
                     }}
                 >
+                    {/* Three.js 3D renderer */}
+                    <ThreeRenderer
+                        width={stageDimensions.width}
+                        height={stageDimensions.height}
+                    />
+
+                    {/* Original 2D Scratch stage */}
                     <DOMElementRenderer
                         domElement={canvas}
                         style={{
