@@ -6,33 +6,53 @@ class ThreeRenderer extends React.Component {
     constructor (props) {
         super(props);
         this.containerRef = React.createRef();
+        this.spriteMeshes = {}; 
     }
 
     componentDidMount () {
+        this.initThreeJS();
+        this.animate();
+    }
+
+    initThreeJS () {
         const {width, height} = this.props;
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 2000);
         this.camera.position.set(0, 0, 500);
 
-        // 背景を透明にする設定
         this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
         this.renderer.setClearColor(0x000000, 0); 
         this.renderer.setSize(width, height);
-        this.containerRef.current.appendChild(this.renderer.domElement);
+        if (this.containerRef.current) {
+            this.containerRef.current.appendChild(this.renderer.domElement);
+        }
 
-        // 2D画面を3D空間に映し出す板（猫を表示する用）
-        const geometry = new THREE.PlaneGeometry(width, height);
-        this.texture = new THREE.CanvasTexture(this.props.vm.runtime.renderer.canvas);
-        const material = new THREE.MeshBasicMaterial({ map: this.texture, transparent: true });
-        this.screenMesh = new THREE.Mesh(geometry, material);
-        this.scene.add(this.screenMesh);
-
-        this.animate();
+        this.scene.add(new THREE.AmbientLight(0xffffff, 1));
     }
 
     animate = () => {
         this.animationId = requestAnimationFrame(this.animate);
-        if (this.texture) this.texture.needsUpdate = true;
+        if (!this.props.vm || !this.props.vm.runtime) return;
+
+        const runtime = this.props.vm.runtime;
+
+        runtime.targets.forEach(target => {
+            if (target.isStage) return;
+            let mesh = this.spriteMeshes[target.id];
+            if (!mesh) {
+                const geometry = new THREE.PlaneGeometry(1, 1);
+                const material = new THREE.MeshBasicMaterial({ transparent: true, side: THREE.DoubleSide });
+                mesh = new THREE.Mesh(geometry, material);
+                this.scene.add(mesh);
+                this.spriteMeshes[target.id] = mesh;
+            }
+            mesh.position.x = target.x;
+            mesh.position.y = target.y;
+            mesh.position.z = target.z || 0; 
+            mesh.rotation.z = (target.direction - 90) * (-Math.PI / 180);
+            mesh.visible = target.visible;
+        });
+
         this.renderer.render(this.scene, this.camera);
     }
 
