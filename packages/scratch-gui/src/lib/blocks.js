@@ -199,8 +199,6 @@ export default function (vm) {
     ScratchBlocks.Blocks.sensing_of.init = function () {
         const blockId = this.id;
         const blockType = this.type;
-
-        // Get the sensing_of block from vm.
         let defaultSensingOfBlock;
         const blocks = vm.runtime.flyoutBlocks._blocks;
         Object.keys(blocks).forEach(id => {
@@ -209,9 +207,6 @@ export default function (vm) {
                 defaultSensingOfBlock = block;
             }
         });
-
-        // Function that fills in menu for the first input in the sensing block.
-        // Called every time it opens since it depends on the values in the other block input.
         const menuFn = function () {
             const stageOptions = [
                 [ScratchBlocks.Msg.SENSING_OF_BACKDROPNUMBER, 'backdrop #'],
@@ -230,29 +225,18 @@ export default function (vm) {
             if (vm.editingTarget) {
                 let lookupBlocks = vm.editingTarget.blocks;
                 let sensingOfBlock = lookupBlocks.getBlock(blockId);
-
-                // The block doesn't exist, but should be in the flyout. Look there.
                 if (!sensingOfBlock) {
                     sensingOfBlock = vm.runtime.flyoutBlocks.getBlock(blockId) || defaultSensingOfBlock;
-                    // If we still don't have a block, just return an empty list . This happens during
-                    // scratch blocks construction.
-                    if (!sensingOfBlock) {
-                        return [['', '']];
-                    }
-                    // The block was in the flyout so look up future block info there.
+                    if (!sensingOfBlock) return [['', '']];
                     lookupBlocks = vm.runtime.flyoutBlocks;
                 }
                 const sort = function (options) {
                     options.sort(ScratchBlocks.scratchBlocksUtils.compareStrings);
                 };
-                // Get all the stage variables (no lists) so we can add them to menu when the stage is selected.
                 const stageVariableOptions = vm.runtime.getTargetForStage().getAllVariableNamesInScopeByType('');
                 sort(stageVariableOptions);
                 const stageVariableMenuItems = stageVariableOptions.map(variable => [variable, variable]);
                 if (sensingOfBlock.inputs.OBJECT.shadow !== sensingOfBlock.inputs.OBJECT.block) {
-                    // There's a block dropped on top of the menu. It'd be nice to evaluate it and
-                    // return the correct list, but that is tricky. Scratch2 just returns stage options
-                    // so just do that here too.
                     return stageOptions.concat(stageVariableMenuItems);
                 }
                 const menuBlock = lookupBlocks.getBlock(sensingOfBlock.inputs.OBJECT.shadow);
@@ -260,10 +244,8 @@ export default function (vm) {
                 if (selectedItem === '_stage_') {
                     return stageOptions.concat(stageVariableMenuItems);
                 }
-                // Get all the local variables (no lists) and add them to the menu.
                 const target = vm.runtime.getSpriteTargetByName(selectedItem);
                 let spriteVariableOptions = [];
-                // The target should exist, but there are ways for it not to (e.g. #4203).
                 if (target) {
                     spriteVariableOptions = target.getAllVariableNamesInScopeByType('', true);
                     sort(spriteVariableOptions);
@@ -273,7 +255,6 @@ export default function (vm) {
             }
             return [['', '']];
         };
-
         const json = jsonForSensingMenus(menuFn);
         this.jsonInit(json);
     };
@@ -317,59 +298,31 @@ export default function (vm) {
         vm.runtime.emit('PLAY_NOTE', noteNum, extensionId);
     };
 
-    // Use a collator's compare instead of localeCompare which internally
-    // creates a collator. Using this is a lot faster in browsers that create a
-    // collator for every localeCompare call.
-    // const collator = new Intl.Collator([], {
-    //     sensitivity: 'base',
-    //     numeric: true
-    // });
-    // ScratchBlocks.scratchBlocksUtils.compareStrings = function (str1, str2) {
-    //     return collator.compare(str1, str2);
-    // };
-
-    // Blocks wants to know if 3D CSS transforms are supported. The cross
-    // section of browsers Scratch supports and browsers that support 3D CSS
-    // transforms will make the return always true.
-    //
-    // Shortcutting to true lets us skip an expensive style recalculation when
-    // first loading the Scratch editor.
     ScratchBlocks.utils.is3dSupported = function () {
         return true;
     };
-// --- ここからPicoratch 3Dブロックの定義を追加 ---
+
+    // --- ここに3Dブロックの定義を追加 ---
     ScratchBlocks.Blocks['motion_setz'] = {
         init: function () {
             this.jsonInit({
                 "message0": "z座標を %1 にする",
-                "args0": [
-                    {
-                        "type": "input_value",
-                        "name": "Z"
-                    }
-                ],
+                "args0": [{ "type": "input_value", "name": "Z" }],
                 "category": ScratchBlocks.Categories.motion,
                 "extensions": ["colours_motion", "shape_statement"]
             });
         }
     };
-
     ScratchBlocks.Blocks['motion_changezby'] = {
         init: function () {
             this.jsonInit({
                 "message0": "z座標を %1 ずつ変える",
-                "args0": [
-                    {
-                        "type": "input_value",
-                        "name": "Z"
-                    }
-                ],
+                "args0": [{ "type": "input_value", "name": "Z" }],
                 "category": ScratchBlocks.Categories.motion,
                 "extensions": ["colours_motion", "shape_statement"]
             });
         }
     };
-
     ScratchBlocks.Blocks['motion_zposition'] = {
         init: function () {
             this.jsonInit({
@@ -380,7 +333,6 @@ export default function (vm) {
             });
         }
     };
-    // --- ここまで ---
 
-    return ScratchBlocks; // これが最後
+    return ScratchBlocks;
 }
