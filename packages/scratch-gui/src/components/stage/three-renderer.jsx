@@ -2,10 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import * as THREE from 'three';
 
-/**
- * ThreeRenderer component initializes and manages a Three.js scene,
- * camera, and renderer. It renders a basic 3D scene with a rotating cube.
- */
 class ThreeRenderer extends React.Component {
     constructor (props) {
         super(props);
@@ -23,19 +19,13 @@ class ThreeRenderer extends React.Component {
     }
 
     componentDidUpdate (prevProps) {
-        // Handle size changes
-        if (
-            prevProps.width !== this.props.width ||
-            prevProps.height !== this.props.height
-        ) {
+        if (prevProps.width !== this.props.width || prevProps.height !== this.props.height) {
             this.handleResize();
         }
     }
 
     componentWillUnmount () {
-        if (this.animationId) {
-            cancelAnimationFrame(this.animationId);
-        }
+        if (this.animationId) cancelAnimationFrame(this.animationId);
         if (this.renderer && this.containerRef.current) {
             this.containerRef.current.removeChild(this.renderer.domElement);
             this.renderer.dispose();
@@ -46,41 +36,38 @@ class ThreeRenderer extends React.Component {
         const {width, height} = this.props;
         const container = this.containerRef.current;
 
-        // Create scene
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0x1a1a1a);
+        
+        // 【重要】背景色を設定する行（this.scene.background = ...）を削除しました。
+        // これにより、背景が「透明」になります。
 
-        // Create camera
-        this.camera = new THREE.PerspectiveCamera(
-            75,
-            width / height,
-            0.1,
-            1000
-        );
-        this.camera.position.z = 5;
+        this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+        this.camera.position.set(2, 2, 5); // カメラを少し斜めに配置
+        this.camera.lookAt(0, 0, 0);
 
-        // Create renderer
+        // 【重要】alpha: true に設定することで、後ろの2Dステージが透けて見えるようになります。
         this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+        this.renderer.setClearColor(0x000000, 0); // 透明度0（完全に透明）に設定
         this.renderer.setSize(width, height);
         this.renderer.setPixelRatio(window.devicePixelRatio);
         container.appendChild(this.renderer.domElement);
 
-        // Create a simple cube
-        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        // 3Dだとわかりやすくするために「床の網目（グリッド）」を追加
+        const gridHelper = new THREE.GridHelper(10, 10);
+        this.scene.add(gridHelper);
+
+        // キューブの作成
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshPhongMaterial({color: 0x00ff00});
         this.cube = new THREE.Mesh(geometry, material);
+        this.cube.position.y = 0.5; // 床の上に置く
         this.scene.add(this.cube);
 
-        // Add lighting
+        // ライトの追加（これがないと真っ暗になります）
         const light = new THREE.DirectionalLight(0xffffff, 1);
         light.position.set(5, 5, 5);
         this.scene.add(light);
-
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        this.scene.add(ambientLight);
-
-        // Handle window resize
-        window.addEventListener('resize', this.handleResize);
+        this.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     }
 
     handleResize = () => {
@@ -94,13 +81,9 @@ class ThreeRenderer extends React.Component {
 
     animate = () => {
         this.animationId = requestAnimationFrame(this.animate);
-
-        // Rotate the cube
         if (this.cube) {
-            this.cube.rotation.x += 0.01;
-            this.cube.rotation.y += 0.01;
+            this.cube.rotation.y += 0.01; // くるくる回す
         }
-
         if (this.renderer && this.scene && this.camera) {
             this.renderer.render(this.scene, this.camera);
         }
@@ -111,11 +94,13 @@ class ThreeRenderer extends React.Component {
             <div
                 ref={this.containerRef}
                 style={{
-                    width: this.props.width,
-                    height: this.props.height,
+                    width: '100%',
+                    height: '100%',
                     position: 'absolute',
                     top: 0,
-                    left: 0
+                    left: 0,
+                    zIndex: 10, // Scratchの2Dキャンバスより手前に表示
+                    pointerEvents: 'none' // マウス操作が後ろの猫に届くようにする
                 }}
             />
         );
