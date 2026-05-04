@@ -57,6 +57,7 @@ const StageComponent = props => {
                     <ThreeRenderer
                         width={stageDimensions.width}
                         height={stageDimensions.height}
+                        vm={props.vm}
                     />
 
                     {/* Original 2D Scratch stage */}
