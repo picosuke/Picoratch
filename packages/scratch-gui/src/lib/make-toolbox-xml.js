@@ -134,6 +134,21 @@ const motion = function (isInitialSetup, isStage, targetId, colors) {
                 </shadow>
             </value>
         </block>
+        
+        <block type="motion_changezby">
+            <value name="Z">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>        
+        <block type="motion_setz">
+            <value name="Z">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
         ${blockSeparator}
         <block type="motion_ifonedgebounce"/>
         ${blockSeparator}
@@ -141,6 +156,7 @@ const motion = function (isInitialSetup, isStage, targetId, colors) {
         ${blockSeparator}
         <block id="${targetId}_xposition" type="motion_xposition"/>
         <block id="${targetId}_yposition" type="motion_yposition"/>
+        <block id="${targetId}_zposition" type="motion_zposition"/>
         <block id="${targetId}_direction" type="motion_direction"/>`}
         ${categorySeparator}
     </category>
