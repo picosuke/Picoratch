@@ -25,9 +25,8 @@ jobs:
       - name: Install dependencies
         run: |
           npm install --legacy-peer-deps
-          # GUIフォルダの中に Three.js を強制的に叩き込みます
-          cd packages/scratch-gui
-          npm install three --legacy-peer-deps
+          # GUIフォルダに対して three を強制的にインストールする
+          npm install three --workspace=@scratch/scratch-gui --legacy-peer-deps
 
       - name: Build Picoratch
         run: |
