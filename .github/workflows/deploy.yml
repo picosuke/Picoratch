@@ -23,14 +23,13 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        # ci ではなく install にすることで、新しく追加した three を確実に取り込みます
+        # package.json のリストを見て正しく全部インストールするコマンド
         run: npm install --legacy-peer-deps
 
       - name: Build Picoratch
         run: |
           export CI=false
           export NODE_OPTIONS="--max_old_space_size=4096"
-          # || true を外して、エラーがあればしっかり止まるようにして原因を追えるようにします
           npm run build
         env:
           NODE_ENV: production
