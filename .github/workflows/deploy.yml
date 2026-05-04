@@ -23,7 +23,11 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: |
+          # 1. 全体のインストール
+          npm install --legacy-peer-deps
+          # 2. GUIパッケージに直接 three を叩き込む（これで Module not found を倒します）
+          npm install three --workspace=@scratch/scratch-gui --legacy-peer-deps
 
       - name: Build Picoratch
         run: |
