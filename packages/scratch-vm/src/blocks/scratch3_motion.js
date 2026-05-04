@@ -264,12 +264,21 @@ class Scratch3MotionBlocks {
         util.target.setXY(util.target.x, y);
     }
 
+    setZ (args, util) {
+        const z = Cast.toNumber(args.Z);
+        util.target.z = z;
+    }
+
     getX (args, util) {
         return this.limitPrecision(util.target.x);
     }
 
     getY (args, util) {
         return this.limitPrecision(util.target.y);
+    }
+    
+    getZ (args, util) {
+        return util.target.z;
     }
 
     getDirection (args, util) {
