@@ -82,6 +82,8 @@ class RenderedTarget extends Target {
          * @type {number}
          */
         this.y = 0;
+        
+        this.z = 0;
 
         /**
          * Scratch direction. Currently should range from -179 to 180.
