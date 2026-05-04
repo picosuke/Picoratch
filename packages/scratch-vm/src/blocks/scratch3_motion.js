@@ -1,7 +1,6 @@
 const Cast = require('../util/cast');
 const MathUtil = require('../util/math-util');
 const Timer = require('../util/timer');
-const Cast = require('../util/cast');
 
 class Scratch3MotionBlocks {
     constructor (runtime) {
