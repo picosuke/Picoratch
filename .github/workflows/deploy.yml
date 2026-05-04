@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22 # エラーの原因だった「古い」と怒られるのを防ぐ超最新版！
+          node-version: 22
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
@@ -29,8 +29,7 @@ jobs:
         run: |
           export CI=false
           export NODE_OPTIONS="--max_old_space_size=4096"
-          # 最後に「|| true」をつけることで、途中でエラーが出ても無理やり公開まで進めます！
-          npm run build || true
+          npm run build
         env:
           NODE_ENV: production
 
