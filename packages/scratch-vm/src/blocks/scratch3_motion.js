@@ -32,9 +32,11 @@ class Scratch3MotionBlocks {
             motion_setx: this.setX,
             motion_changeyby: this.changeY,
             motion_sety: this.setY,
+            motion_changezby: this.changeZ,
             motion_setz: this.setZ,
             motion_xposition: this.getX,
             motion_yposition: this.getY,
+            motion_zposition: this.getZ,
             motion_direction: this.getDirection,
             // Legacy no-op blocks:
             motion_scroll_right: () => {},
