@@ -20,8 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20 # 16から20に上げるとダウンロードエラーが減ります
-          cache: 'npm'
+          node-version: 20
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
@@ -30,7 +29,6 @@ jobs:
         run: |
           export CI=false
           export NODE_OPTIONS="--max_old_space_size=4096"
-          # ビルドを実行
           npm run build
         env:
           NODE_ENV: production
@@ -38,7 +36,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # モノレポ版の場合、完成品はここに出力されます
           path: ./packages/scratch-gui/build
 
       - name: Deploy to GitHub Pages
