@@ -23,7 +23,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        # package.json のリストを見て正しく全部インストールするコマンド
+        # package.json を見て、three を含むすべての部品を揃えます
         run: npm install --legacy-peer-deps
 
       - name: Build Picoratch
