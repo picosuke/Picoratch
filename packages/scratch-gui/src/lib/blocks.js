@@ -6,7 +6,7 @@
 export default function (vm) {
     const ScratchBlocks = require('scratch-blocks');
 
-    // --- ヘルパー関数（部品）を先に定義 ---
+    // --- 1. ヘルパー関数（メニュー作成用）を最初に定義 ---
     const spriteMenu = function () {
         const sprites = [];
         for (const targetId in vm.runtime.targets) {
@@ -99,7 +99,7 @@ export default function (vm) {
         extensions: ['colours_sensing']
     });
 
-    // --- 標準ブロックの初期化 ---
+    // --- 2. 標準ブロックの初期化 ---
     ScratchBlocks.Blocks.sound_sounds_menu.init = function () {
         this.jsonInit(jsonForMenuBlock('SOUND_MENU', soundsMenu, 'sounds', []));
         this.getField('SOUND_MENU').setValidator(v => {
@@ -115,10 +115,8 @@ export default function (vm) {
     ScratchBlocks.Blocks.motion_glideto_menu.init = function () { this.jsonInit(jsonForMenuBlock('TO', spriteMenu, 'motion', [[ScratchBlocks.ScratchMsgs.translate('MOTION_GLIDETO_RANDOM', 'random position'), '_random_'], [ScratchBlocks.ScratchMsgs.translate('MOTION_GLIDETO_POINTER', 'mouse-pointer'), '_mouse_']])); };
     ScratchBlocks.Blocks.sensing_of_object_menu.init = function () { this.jsonInit(jsonForMenuBlock('OBJECT', spriteMenu, 'sensing', [[ScratchBlocks.ScratchMsgs.translate('SENSING_OF_STAGE', 'Stage'), '_stage_']])); };
     
-    // sensing_of と他のプロトタイプ設定は変更なし
     ScratchBlocks.Blocks.sensing_of.init = function () {
         const blockId = this.id;
-        const blockType = this.type;
         const menuFn = () => {
             const stageOptions = [[ScratchBlocks.Msg.SENSING_OF_BACKDROPNUMBER, 'backdrop #'], [ScratchBlocks.Msg.SENSING_OF_BACKDROPNAME, 'backdrop name'], [ScratchBlocks.Msg.SENSING_OF_VOLUME, 'volume']];
             const spriteOptions = [[ScratchBlocks.Msg.SENSING_OF_XPOSITION, 'x position'], [ScratchBlocks.Msg.SENSING_OF_YPOSITION, 'y position'], [ScratchBlocks.Msg.SENSING_OF_DIRECTION, 'direction'], [ScratchBlocks.Msg.SENSING_OF_COSTUMENUMBER, 'costume #'], [ScratchBlocks.Msg.SENSING_OF_COSTUMENAME, 'costume name'], [ScratchBlocks.Msg.SENSING_OF_SIZE, 'size'], [ScratchBlocks.Msg.SENSING_OF_VOLUME, 'volume']];
@@ -148,7 +146,7 @@ export default function (vm) {
     ScratchBlocks.FieldNote.playNote_ = (n, id) => vm.runtime.emit('PLAY_NOTE', n, id);
     ScratchBlocks.utils.is3dSupported = () => true;
 
-    // --- ここに3Dブロックの定義を追加（extensionsを使ってエラーを防止） ---
+    // --- 3. Picoratch 3Dブロックの定義を追加 ---
     ScratchBlocks.Blocks['motion_setz'] = {
         init: function () {
             this.jsonInit({
