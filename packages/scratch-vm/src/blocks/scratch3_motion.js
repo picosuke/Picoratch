@@ -32,6 +32,7 @@ class Scratch3MotionBlocks {
             motion_setx: this.setX,
             motion_changeyby: this.changeY,
             motion_sety: this.setY,
+            motion_setz: this.setZ,
             motion_xposition: this.getX,
             motion_yposition: this.getY,
             motion_direction: this.getDirection,
