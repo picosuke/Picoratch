@@ -147,12 +147,12 @@ export default function (vm) {
     ScratchBlocks.utils.is3dSupported = () => true;
 
     // --- 3. Picoratch 3Dブロックの定義を追加 ---
+    // エラーの原因だった「category」の行を消して、extensions（色付け）だけにしました！
     ScratchBlocks.Blocks['motion_setz'] = {
         init: function () {
             this.jsonInit({
                 "message0": "z座標を %1 にする",
                 "args0": [{ "type": "input_value", "name": "Z" }],
-                "category": ScratchBlocks.Categories.motion,
                 "extensions": ["colours_motion", "shape_statement"]
             });
         }
@@ -162,7 +162,6 @@ export default function (vm) {
             this.jsonInit({
                 "message0": "z座標を %1 ずつ変える",
                 "args0": [{ "type": "input_value", "name": "Z" }],
-                "category": ScratchBlocks.Categories.motion,
                 "extensions": ["colours_motion", "shape_statement"]
             });
         }
@@ -171,7 +170,6 @@ export default function (vm) {
         init: function () {
             this.jsonInit({
                 "message0": "z座標",
-                "category": ScratchBlocks.Categories.motion,
                 "checkboxInFlyout": true,
                 "extensions": ["colours_motion", "output_number"]
             });
